@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header class="bg-white text-grey-10" bordered>
-      <q-toolbar>
+      <q-toolbar class="constrain">
         <q-btn
           dense
           round
@@ -36,7 +36,7 @@
         <q-route-tab to="/camera" icon="eva-camera-outline" label="camera" />
       </q-tabs>
     </q-footer>
-    <q-page-container>
+    <q-page-container class="bg-grey-1">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -48,14 +48,7 @@ export default {
 
   components: {},
 
-  methods: {
-    method() {
-      alert("Hi");
-    },
-    hover() {
-      alert("Hovered");
-    },
-  },
+  methods: {},
 };
 </script>
 
