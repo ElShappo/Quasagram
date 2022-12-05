@@ -31,6 +31,7 @@
         class="text-grey-10"
         active-color="primary"
         indicator-color="transparent"
+        align="right"
       >
         <q-route-tab to="/" icon="eva-home-outline" label="home" />
         <q-route-tab to="/camera" icon="eva-camera-outline" label="camera" />
