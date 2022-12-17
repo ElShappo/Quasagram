@@ -91,11 +91,33 @@ export default {
       let context = canvas.getContext("2d");
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
+      this.disableCamera();
       this.isCaptured = true;
       this.post.photo = this.dataURItoBlob(canvas.toDataURL());
     },
-    captureImageFallback(value) {
-      console.log(value);
+    captureImageFallback(file) {
+      this.post.photo = file;
+
+      let canvas = this.$refs.canvas;
+      let context = canvas.getContext("2d");
+
+      let reader = new FileReader();
+      reader.onload = (event) => {
+        let img = new Image();
+        img.onload = () => {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          context.drawImage(img, 0, 0);
+          this.isCaptured = true;
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    },
+    disableCamera() {
+      this.$refs.video.srcObject.getVideoTracks().forEach((track) => {
+        track.stop();
+      });
     },
     dataURItoBlob(dataURI) {
       // convert base64 to raw binary data held in a string
@@ -124,6 +146,11 @@ export default {
   mounted() {
     this.initCamera();
     this.checkGetUserMedia();
+  },
+  beforeUnmount() {
+    if (this.hasCameraAccess) {
+      this.disableCamera();
+    }
   },
 };
 </script>
