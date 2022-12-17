@@ -8,12 +8,25 @@
     </div>
     <div class="text-center q-pa-md col-12">
       <q-btn
+        v-if="hasCameraAccess"
         @click="captureImage"
         round
         color="grey-10"
         size="lg"
         icon="eva-camera"
       />
+      <q-file
+        v-else
+        @update:model-value="captureImageFallback"
+        outlined
+        label="Choose an image"
+        accept="image/*"
+        v-model="imageUpload"
+      >
+        <template v-slot:prepend>
+          <q-icon name="eva-attach-outline" />
+        </template>
+      </q-file>
     </div>
     <div class="col-12 col-sm-6 row justify-center q-gutter-md">
       <q-input class="col-12" v-model="caption" label="Caption" dense="dense" />
@@ -43,6 +56,8 @@ export default {
         date: Date.now(),
       },
       isCaptured: false,
+      imageUpload: [],
+      hasCameraAccess: true,
     };
   },
   methods: {
@@ -61,6 +76,9 @@ export default {
         })
         .then((stream) => {
           this.$refs.video.srcObject = stream;
+        })
+        .catch((error) => {
+          this.hasCameraAccess = false;
         });
     },
     captureImage() {
@@ -75,6 +93,9 @@ export default {
 
       this.isCaptured = true;
       this.post.photo = this.dataURItoBlob(canvas.toDataURL());
+    },
+    captureImageFallback(value) {
+      console.log(value);
     },
     dataURItoBlob(dataURI) {
       // convert base64 to raw binary data held in a string
