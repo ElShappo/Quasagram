@@ -31,6 +31,7 @@
     <div class="col-12 col-sm-6 row justify-center q-gutter-md">
       <q-input class="col-12" v-model="caption" label="Caption" dense="dense" />
       <q-input
+        :loading="isLocationLoading"
         class="col-12"
         v-model="post.location"
         label="Location"
@@ -38,6 +39,7 @@
       >
         <template v-slot:append>
           <q-btn
+            v-if="!isLocationLoading"
             @click="getLocation"
             round
             dense
@@ -69,6 +71,7 @@ export default {
       isCaptured: false,
       imageUpload: [],
       hasCameraAccess: true,
+      isLocationLoading: false,
     };
   },
   methods: {
@@ -154,11 +157,13 @@ export default {
       return blob;
     },
     async getLocation() {
+      this.isLocationLoading = true;
       try {
         let location = await fetch(
           `http://ip-api.com/json/?fields=city,country`
         );
         let json = await location.json();
+        this.post.location = json.city + ", " + json.country;
       } catch (error) {
         this.$q.notify({
           position: "top",
@@ -167,7 +172,7 @@ export default {
           icon: "eva-alert-circle-outline",
         });
       }
-      this.post.location = json.city + ", " + json.country;
+      this.isLocationLoading = false;
     },
   },
   mounted() {
