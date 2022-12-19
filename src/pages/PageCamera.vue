@@ -30,7 +30,12 @@
     </div>
     <div class="col-12 col-sm-6 row justify-center q-gutter-md">
       <q-input class="col-12" v-model="caption" label="Caption" dense="dense" />
-      <q-input class="col-12" v-model="location" label="Location" dense="dense">
+      <q-input
+        class="col-12"
+        v-model="post.location"
+        label="Location"
+        dense="dense"
+      >
         <template v-slot:append>
           <q-btn
             @click="getLocation"
@@ -149,13 +154,20 @@ export default {
       return blob;
     },
     async getLocation() {
-      let location = await fetch(`http://ip-api.com/json/?fields=city,country`);
-      let json = await location.json();
-
-      console.log(json);
-
-      this.location = json.city + ", " + json.country;
-      console.log(this.location);
+      try {
+        let location = await fetch(
+          `http://ip-api.com/json/?fields=city,country`
+        );
+        let json = await location.json();
+      } catch (error) {
+        this.$q.notify({
+          position: "top",
+          color: "grey-6",
+          message: "Unable to identify your location",
+          icon: "eva-alert-circle-outline",
+        });
+      }
+      this.post.location = json.city + ", " + json.country;
     },
   },
   mounted() {
