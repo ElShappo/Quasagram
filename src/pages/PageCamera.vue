@@ -32,7 +32,13 @@
       <q-input class="col-12" v-model="caption" label="Caption" dense="dense" />
       <q-input class="col-12" v-model="location" label="Location" dense="dense">
         <template v-slot:append>
-          <q-btn round dense flat icon="eva-navigation-2-outline" />
+          <q-btn
+            @click="getLocation"
+            round
+            dense
+            flat
+            icon="eva-navigation-2-outline"
+          />
         </template>
       </q-input>
       <q-btn unelevated rounded color="primary" label="Add a new post" />
@@ -141,6 +147,15 @@ export default {
       // write the ArrayBuffer to a blob, and you're done
       var blob = new Blob([ab], { type: mimeString });
       return blob;
+    },
+    async getLocation() {
+      let location = await fetch(`http://ip-api.com/json/?fields=city,country`);
+      let json = await location.json();
+
+      console.log(json);
+
+      this.location = json.city + ", " + json.country;
+      console.log(this.location);
     },
   },
   mounted() {
