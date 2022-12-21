@@ -48,33 +48,34 @@
 
 <script>
 import { date } from "quasar";
+import axios from "axios";
 
 export default {
   name: "PageHome",
   data() {
     return {
       posts: [
-        {
-          id: 1,
-          caption: "Red Square",
-          date: 1670261361432,
-          location: "Moscow, Russia",
-          imageUrl: "https://cdn.quasar.dev/img/parallax2.jpg",
-        },
-        {
-          id: 2,
-          caption: "Red Square",
-          date: 1670261361432,
-          location: "Moscow, Russia",
-          imageUrl: "https://cdn.quasar.dev/img/parallax2.jpg",
-        },
-        {
-          id: 3,
-          caption: "Red Square",
-          date: 1670261361432,
-          location: "Moscow, Russia",
-          imageUrl: "https://cdn.quasar.dev/img/parallax2.jpg",
-        },
+        // {
+        //   id: 1,
+        //   caption: "Red Square",
+        //   date: 1670261361432,
+        //   location: "Moscow, Russia",
+        //   imageUrl: "https://cdn.quasar.dev/img/parallax2.jpg",
+        // },
+        // {
+        //   id: 2,
+        //   caption: "Red Square",
+        //   date: 1670261361432,
+        //   location: "Moscow, Russia",
+        //   imageUrl: "https://cdn.quasar.dev/img/parallax2.jpg",
+        // },
+        // {
+        //   id: 3,
+        //   caption: "Red Square",
+        //   date: 1670261361432,
+        //   location: "Moscow, Russia",
+        //   imageUrl: "https://cdn.quasar.dev/img/parallax2.jpg",
+        // },
       ],
     };
   },
@@ -82,6 +83,21 @@ export default {
     fancyTime(timestamp) {
       return date.formatDate(timestamp, "D MMMM YYYY, HH:mm");
     },
+    getPosts() {
+      // console.log("Get posts method fired");
+      axios
+        .get("http://192.168.25.129:3000/posts")
+        .then((response) => {
+          // console.log(response.data);
+          this.posts = response.data;
+        })
+        .catch((error) => {
+          console.log("error: ", error);
+        });
+    },
+  },
+  created() {
+    this.getPosts();
   },
 };
 </script>

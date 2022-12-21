@@ -2,6 +2,8 @@
 .thumbs.db
 node_modules
 
+/backend/quasagram-6b4de-8e066134a44f.json
+
 # Quasar core related directories
 .quasar
 /dist
