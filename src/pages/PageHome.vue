@@ -2,7 +2,7 @@
   <q-page class="constrain q-pa-md">
     <div class="row q-col-gutter-lg">
       <div class="col-12 col-sm-8">
-        <template v-if="!loadingPosts && !posts.length">
+        <template v-if="!loadingPosts && posts.length">
           <q-card
             v-for="post in posts"
             :key="post.id"
@@ -32,12 +32,12 @@
           </q-card>
         </template>
 
-        <template v-else-if="!loadingPosts && posts.length">
+        <template v-else-if="!loadingPosts && !posts.length">
           <div
-            class="row text-h5 justify-center content-center text-grey-6"
+            class="row text-h6 justify-center text-weight-ligh content-center text-grey-6"
             style="height: 100%"
           >
-            <span>No posts present</span>
+            <span>No posts present.</span>
           </div>
         </template>
 
@@ -110,7 +110,7 @@ export default {
       // console.log("Get posts method fired");
       this.loadingPosts = true;
       axios
-        .get("http://192.168.25.129:3000/posts")
+        .get(`${process.env.API}/posts`)
         .then((response) => {
           // console.log(response.data);
           this.posts = response.data;

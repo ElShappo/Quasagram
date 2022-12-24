@@ -29,7 +29,12 @@
       </q-file>
     </div>
     <div class="col-12 col-sm-6 row justify-center q-gutter-md">
-      <q-input class="col-12" v-model="caption" label="Caption" dense="dense" />
+      <q-input
+        class="col-12"
+        v-model="post.caption"
+        label="Caption"
+        dense="dense"
+      />
       <q-input
         :loading="isLocationLoading"
         class="col-12"
@@ -48,13 +53,20 @@
           />
         </template>
       </q-input>
-      <q-btn unelevated rounded color="primary" label="Add a new post" />
+      <q-btn
+        @click="addPost"
+        unelevated
+        rounded
+        color="primary"
+        label="Add a new post"
+      />
     </div>
   </q-page>
 </template>
 
 <script>
 import { uid } from "quasar";
+import axios from "axios";
 require("md-gum-polyfill");
 
 export default {
@@ -173,6 +185,26 @@ export default {
         });
       }
       this.isLocationLoading = false;
+    },
+    addPost() {
+      let formData = new FormData();
+
+      formData.append("id", this.post.id);
+      formData.append("caption", this.post.caption);
+      formData.append("location", this.post.location);
+      formData.append("date", this.post.date);
+      formData.append("file", this.post.photo, this.post.id + ".png");
+
+      axios
+        .post(`${process.env.API}/createPost`, formData)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      console.log("addPost method triggered");
     },
   },
   mounted() {

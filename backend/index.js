@@ -53,6 +53,17 @@ app.get("/posts", (request, response) => {
 });
 
 /*
+  endpoint - createPost
+*/
+
+app.post("/createPost", (request, response) => {
+  response.set("Access-Control-Allow-Origin", "*");
+
+  console.log("Create Post fired");
+  response.send(request.headers);
+});
+
+/*
   listen
 */
 

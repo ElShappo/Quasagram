@@ -8,6 +8,9 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js
 
+let API_DEV = "http://192.168.25.129:3000";
+let API_PROD = "";
+
 const ESLintPlugin = require("eslint-webpack-plugin");
 
 const { configure } = require("quasar/wrappers");
@@ -44,6 +47,9 @@ module.exports = configure(function (ctx) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
+      env: {
+        API: API_DEV,
+      },
       vueRouterMode: "hash", // available values: 'hash', 'history'
 
       // transpile: false,
