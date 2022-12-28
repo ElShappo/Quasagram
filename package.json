@@ -13,6 +13,7 @@
   "dependencies": {
     "@quasar/extras": "^1.0.0",
     "axios": "^0.21.1",
+    "busboy": "^1.6.0",
     "core-js": "^3.6.5",
     "md-gum-polyfill": "^1.0.0",
     "quasar": "^2.6.0",
