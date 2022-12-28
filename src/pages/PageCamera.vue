@@ -7,26 +7,38 @@
       <canvas v-show="isCaptured" ref="canvas" class="full-width" />
     </div>
     <div class="text-center q-pa-md col-12">
-      <q-btn
-        v-if="hasCameraAccess"
-        @click="captureImage"
-        round
-        color="grey-10"
-        size="lg"
-        icon="eva-camera"
-      />
-      <q-file
-        v-else
-        @update:model-value="captureImageFallback"
-        outlined
-        label="Choose an image"
-        accept="image/*"
-        v-model="imageUpload"
-      >
-        <template v-slot:prepend>
-          <q-icon name="eva-attach-outline" />
-        </template>
-      </q-file>
+      <div class="q-gutter-md">
+        <q-btn
+          v-if="hasCameraAccess"
+          :disabled="isCaptured"
+          @click="captureImage"
+          round
+          color="grey-10"
+          size="lg"
+          icon="eva-camera"
+        />
+        <q-btn
+          v-if="hasCameraAccess"
+          :disabled="!isCaptured"
+          @click="resetImage"
+          round
+          color="grey-10"
+          size="lg"
+          icon="eva-refresh-outline"
+        />
+        <q-file
+          v-else
+          @update:model-value="captureImageFallback"
+          outlined
+          label="Choose an image"
+          accept="image/*"
+          v-model="imageUpload"
+        >
+          <template v-slot:prepend>
+            <q-icon name="eva-attach-outline" />
+          </template>
+        </q-file>
+      </div>
     </div>
     <div class="col-12 col-sm-6 row justify-center q-gutter-md">
       <q-input
@@ -54,6 +66,7 @@
         </template>
       </q-input>
       <q-btn
+        :disabled="!isCaptured || !post.caption"
         @click="addPost"
         unelevated
         rounded
@@ -121,6 +134,11 @@ export default {
       this.isCaptured = true;
       this.post.photo = this.dataURItoBlob(canvas.toDataURL());
     },
+    resetImage() {
+      this.isCaptured = false;
+      this.post.photo = null;
+      this.initCamera();
+    },
     captureImageFallback(file) {
       this.post.photo = file;
 
@@ -187,6 +205,10 @@ export default {
       this.isLocationLoading = false;
     },
     addPost() {
+      this.$q.loading.show({
+        message: "Adding a new post...",
+      });
+
       let formData = new FormData();
 
       formData.append("id", this.post.id);
@@ -199,9 +221,17 @@ export default {
         .post(`${process.env.API}/createPost`, formData)
         .then((response) => {
           console.log(response);
+          this.$q.loading.hide();
+          this.$router.push("/");
         })
         .catch((err) => {
           console.log(err);
+          this.$q.loading.hide();
+          this.$q.notify({
+            type: "negative",
+            position: "top",
+            message: "Couldn't add a new post",
+          });
         });
 
       console.log("addPost method triggered");
